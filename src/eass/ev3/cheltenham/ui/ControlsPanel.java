@@ -60,27 +60,27 @@ public class ControlsPanel extends DinoPanel {
 	    c.gridy = 0;
 	    c.gridwidth = 1;
 	    add(fbutton, c);
-		
-	    // Right
-	    rbutton = new JButton("Right");
-	    rbutton.setMnemonic(KeyEvent.VK_R);
-	    rbutton.setActionCommand("right");
-	    rbutton.addActionListener(ui);
-	    rbutton.setToolTipText("Click to turn Right");
-	    c.gridx = 1;
-	    c.gridy = 0;
-	    add(rbutton, c);
-	
+			
 	    // Left
 	    lbutton = new JButton("Left");
 	    lbutton.setMnemonic(KeyEvent.VK_L);
 	    lbutton.setActionCommand("left");
 	    lbutton.addActionListener(ui);
 	    lbutton.setToolTipText("Click to turn Left");
-	    c.gridx = 2;
+	    c.gridx = 1;
 	    c.gridy = 0;
 	    add(lbutton, c);
 	    
+	    // Right
+	    rbutton = new JButton("Right");
+	    rbutton.setMnemonic(KeyEvent.VK_R);
+	    rbutton.setActionCommand("right");
+	    rbutton.addActionListener(ui);
+	    rbutton.setToolTipText("Click to turn Right");
+	    c.gridx = 2;
+	    c.gridy = 0;
+	    add(rbutton, c);
+
 	    // Stop
 	    sbutton = new JButton("Stop");
 	    sbutton.setMnemonic(KeyEvent.VK_S);
@@ -92,7 +92,7 @@ public class ControlsPanel extends DinoPanel {
 	    add(sbutton, c);
 	    
 	    // Reverse
-	    bbutton = new JButton("Reverse");
+	    bbutton = new JButton("Back");
 	    bbutton.setMnemonic(KeyEvent.VK_S);
 	    bbutton.setActionCommand("backward");
 	    bbutton.addActionListener(ui);

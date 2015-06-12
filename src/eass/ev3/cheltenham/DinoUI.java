@@ -33,11 +33,13 @@ import java.awt.event.WindowListener;
 import java.awt.event.WindowEvent;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import eass.ev3.cheltenham.ui.GoalsOnlyPanel;
 import eass.ev3.cheltenham.ui.RulesOnlyPanel;
 import eass.ev3.cheltenham.ui.SimplePanel;
 import eass.ev3.cheltenham.ui.SimpleRulesPanel;
+import eass.ev3.cheltenham.ui.SimpleRulesPanelnoIns;
 import eass.ev3.cheltenham.ui.TabPanel;
 import ail.syntax.Action;
 import ail.syntax.Literal;
@@ -62,7 +64,7 @@ public class DinoUI extends JTabbedPane implements ActionListener, WindowListene
 	    public static DinoEnvironment env;
 	    protected MAS mas;
 	    public static String rName = "dinor3x";
-	    protected static String program = "/src/eass/ev3/cheltenham/Dinor3x.ail";
+	    protected static String program = "/src/examples/eass/ev3/cheltenham/Dinor3x.ail";
 	    
 	    // A list of all the different versions of the interface designed for different ability levels.
 	    ArrayList<TabPanel> panels = new ArrayList<TabPanel>();
@@ -71,7 +73,7 @@ public class DinoUI extends JTabbedPane implements ActionListener, WindowListene
 	    public EnvironmentThread envThread = new EnvironmentThread();
 	    
 	    // Does this robot have wheels?
-	    private boolean wheeled = false;
+	    private boolean wheeled = true;
 	    
 	    public DinoUI() {
 	    	this.setBackground(Color.WHITE);	    	
@@ -104,7 +106,7 @@ public class DinoUI extends JTabbedPane implements ActionListener, WindowListene
 	    	JMenuItem tabshow = new JMenuItem("Show Goal Tab");
 	    	file.add(tabshow);
 	    	
-	    	JMenuItem wheeled_item = new JMenuItem("Robot has Wheels");
+	    	JMenuItem wheeled_item = new JMenuItem("Robot has Legs");
 	    	file.add(wheeled_item);
 	    	wheeled_item.addActionListener(new ActionListener() {
 
@@ -147,7 +149,7 @@ public class DinoUI extends JTabbedPane implements ActionListener, WindowListene
 	        addTab("Simple", teleop);
 	        panels.add(teleop);
 	        
-	        SimpleRulesPanel sro = new SimpleRulesPanel(this, 1);
+	        SimpleRulesPanelnoIns sro = new SimpleRulesPanelnoIns(this, 1);
 	        addTab("Simple Rules", sro);
 	        panels.add(sro);
 	        
@@ -322,12 +324,9 @@ public class DinoUI extends JTabbedPane implements ActionListener, WindowListene
 	     * (non-Javadoc)
 	     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	     */
-	    boolean activer1 = false;
-	    boolean activer2 = false;
-	    boolean activer3 = false;
-	    boolean activer4 = false;
 		public void actionPerformed(ActionEvent e) {
 	    	Action act = new Action(e.getActionCommand());
+	    	boolean mustbeprocessed = false;
 	    	
 	    	if (e.getActionCommand().equals("r1action1") || e.getActionCommand().equals("r1action2") || e.getActionCommand().equals("r1action3") ||
 	    			e.getActionCommand().equals("r2action1") || e.getActionCommand().equals("r2action2") || e.getActionCommand().equals("r2action3") ||
@@ -338,55 +337,13 @@ public class DinoUI extends JTabbedPane implements ActionListener, WindowListene
 	    		@SuppressWarnings("unchecked")
 				JComboBox<String> cb = (JComboBox<String>)e.getSource();
 	    		act.addTerm(new Literal((String)cb.getSelectedItem()));
-	    	} 
-	    	
-	    	if (e.getActionCommand().equals("rule1")) {
-	    		if (((AbstractButton) e.getSource()).getModel().isSelected() && !activer1) {
-	    			act = new Action("active");
-	    			act.addTerm(new Literal("rule1"));
-	    			activer1 = true;
-	    		} else {
-	    			act = new Action("inactive");
-	    			act.addTerm(new Literal("rule1"));
-	    			activer1 = false;
-	    		}
-	    	}
-	    			
-	    	if (e.getActionCommand().equals("rule2")) {
-	    		if (((AbstractButton) e.getSource()).getModel().isSelected() && !activer2) {
-	    			act = new Action("active");
-	    			act.addTerm(new Literal("rule2"));
-	    			activer1 = true;
-	    		} else {
-	    			act = new Action("inactive");
-	    			act.addTerm(new Literal("rule2"));
-	    			activer1 = false;
-	    		}
-	    	}
-	    	if (e.getActionCommand().equals("rule3")) {
-	    		if (((AbstractButton) e.getSource()).getModel().isSelected() && !activer3) {
-	    			act = new Action("active");
-	    			act.addTerm(new Literal("rule3"));
-	    			activer1 = true;
-	    		} else {
-	    			act = new Action("inactive");
-	    			act.addTerm(new Literal("rule3"));
-	    			activer1 = false;
-	    		}
-	    	}
-	    	if (e.getActionCommand().equals("rule4")) {
-	    		if (((AbstractButton) e.getSource()).getModel().isSelected() && !activer4) {
-	    			act = new Action("active");
-	    			act.addTerm(new Literal("rule4"));
-	    			activer1 = true;
-	    		} else {
-	    			act = new Action("inactive");
-	    			act.addTerm(new Literal("rule4"));
-	    			activer1 = false;
-	    		}
+	    		mustbeprocessed = true;
+	    	} else if (e.getActionCommand().equals("rule1") || e.getActionCommand().equals("rule2") ||
+	    			e.getActionCommand().equals("rule3") || e.getActionCommand().equals("rule4") ) {
+	    		mustbeprocessed = true;
 	    	}
 	    	
-	    	envThread.latestAction(act);
+	    	envThread.latestAction(act, mustbeprocessed);
 		}
 				
 		/*
@@ -441,6 +398,7 @@ public class DinoUI extends JTabbedPane implements ActionListener, WindowListene
 	     */
 	    public class EnvironmentThread extends Thread {
 	    	// This stores the most recent action.  We assume children have no interest in queueing actions.
+	    	LinkedList<Action> actionlist = new LinkedList<Action>();
 	    	Action action = null;
 	    	// A flag to control the while loop in the run method.
 	    	boolean isrunning = true;
@@ -450,9 +408,13 @@ public class DinoUI extends JTabbedPane implements ActionListener, WindowListene
 	    	 * @param name
 	    	 * @param act
 	    	 */
-	    	public void latestAction(Action act) {
+	    	public void latestAction(Action act, boolean mustbeprocessed) {
 	    		synchronized(this) {
-	    			action = act;
+	    			if (action == null) {
+	    				action = act;
+	    			} else if (mustbeprocessed) {
+	    				actionlist.offer(act);
+	    			}
 	    			notify();
 	    		}
 	    	}
@@ -465,12 +427,14 @@ public class DinoUI extends JTabbedPane implements ActionListener, WindowListene
 	    		while (isrunning) {
 	    			synchronized(this) {
 	    				// If there is no recent action we wait for one to arrive.
-	    				if (action == null) {
+	    				if (action == null && actionlist.isEmpty()) {
 	    					try {
 	    						wait();
 	    					} catch (InterruptedException ie) {
 	    						System.err.println("catching an interrupt");
 	    					}
+	    				} else if (action == null) {
+	    					action = actionlist.poll();
 	    				}
 	    			}
 	    			
