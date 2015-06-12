@@ -248,40 +248,49 @@ public class DinoEnvironment extends EASSEV3Environment {
 			   	} 
 			   	
 			   	// Enabling, disabling and customising rules.
-			   	else if (act.getFunctor().equals("rule1")) {
-			   		if (!rule1) {
-			   			addSharedBelief(rname, activer1);
-			   			rule1 = true;
-			   		} else {
+			   	else if (act.getFunctor().equals("active")) {
+			   		if (act.getTerm(0).getFunctor().equals("rule1")) {
+			   			if (!rule1) {
+			   				addSharedBelief(rname, activer1);
+			   				rule1 = true;
+			   			} 
+			   		}
+			   		
+			   		if (act.getTerm(0).getFunctor().equals("rule2")) {
+			   			if (!rule2) {
+			   				addSharedBelief(rname, activer2);
+			   				rule2 = true;
+			   			} 
+			   		}
+			   		if (act.getTerm(0).getFunctor().equals("rule3")) {
+			   			if (!rule3) {
+			   				addSharedBelief(rname, activer3);
+			   				rule3 = true;
+			   			} 
+			   		}
+			   		if (act.getTerm(0).getFunctor().equals("rule4")) {
+			   			if (!rule4) {
+			   				addSharedBelief(rname, activer4);
+			   				rule4 = true;
+			   			} 
+			   		}
+			   		return u;
+			   	} else if (act.getFunctor().equals("inactive")) {
+			   		if (act.getTerm(0).getFunctor().equals("rule1") && rule1) {
 			   			removeSharedBelief(rname, activer1);
 			   			rule1 = false;
 			   		}
-			   		return u;
-			   	} else if (act.getFunctor().equals("rule3")) {
-			   		if (!rule3) {
-			   			addSharedBelief(rname, activer3);
-			   			rule3 = true;
-			   		} else {
+			   		if (act.getTerm(0).getFunctor().equals("rule2") && rule2) {
+			   			removeSharedBelief(rname, activer2);
+			   			rule2 = false;
+			   		}
+			   		if (act.getTerm(0).getFunctor().equals("rule3") && rule3) {
 			   			removeSharedBelief(rname, activer3);
 			   			rule3 = false;
 			   		}
-			   		return u;
-			   	} else if (act.getFunctor().equals("rule4")) {
-			   		if (!rule4) {
-			   			addSharedBelief(rname, activer4);
-			   			rule4 = true;
-			   		} else {
+			   		if (act.getTerm(0).getFunctor().equals("rule4") && rule4) {
 			   			removeSharedBelief(rname, activer4);
 			   			rule4 = false;
-			   		}
-			   		return u;
-			   	} else if (act.getFunctor().equals("rule2")) {
-			   		if (!rule2) {
-			   			addSharedBelief(rname, activer2);
-			   			rule2 = true;
-			   		} else {
-			   			removeSharedBelief(rname, activer2);
-			   			rule2 = false;
 			   		}
 			   		return u;
 			   	} else if (act.getFunctor().equals("r1action1")) {

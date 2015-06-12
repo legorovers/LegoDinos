@@ -322,6 +322,10 @@ public class DinoUI extends JTabbedPane implements ActionListener, WindowListene
 	     * (non-Javadoc)
 	     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	     */
+	    boolean activer1 = false;
+	    boolean activer2 = false;
+	    boolean activer3 = false;
+	    boolean activer4 = false;
 		public void actionPerformed(ActionEvent e) {
 	    	Action act = new Action(e.getActionCommand());
 	    	
@@ -335,6 +339,52 @@ public class DinoUI extends JTabbedPane implements ActionListener, WindowListene
 				JComboBox<String> cb = (JComboBox<String>)e.getSource();
 	    		act.addTerm(new Literal((String)cb.getSelectedItem()));
 	    	} 
+	    	
+	    	if (e.getActionCommand().equals("rule1")) {
+	    		if (((AbstractButton) e.getSource()).getModel().isSelected() && !activer1) {
+	    			act = new Action("active");
+	    			act.addTerm(new Literal("rule1"));
+	    			activer1 = true;
+	    		} else {
+	    			act = new Action("inactive");
+	    			act.addTerm(new Literal("rule1"));
+	    			activer1 = false;
+	    		}
+	    	}
+	    			
+	    	if (e.getActionCommand().equals("rule2")) {
+	    		if (((AbstractButton) e.getSource()).getModel().isSelected() && !activer2) {
+	    			act = new Action("active");
+	    			act.addTerm(new Literal("rule2"));
+	    			activer1 = true;
+	    		} else {
+	    			act = new Action("inactive");
+	    			act.addTerm(new Literal("rule2"));
+	    			activer1 = false;
+	    		}
+	    	}
+	    	if (e.getActionCommand().equals("rule3")) {
+	    		if (((AbstractButton) e.getSource()).getModel().isSelected() && !activer3) {
+	    			act = new Action("active");
+	    			act.addTerm(new Literal("rule3"));
+	    			activer1 = true;
+	    		} else {
+	    			act = new Action("inactive");
+	    			act.addTerm(new Literal("rule3"));
+	    			activer1 = false;
+	    		}
+	    	}
+	    	if (e.getActionCommand().equals("rule4")) {
+	    		if (((AbstractButton) e.getSource()).getModel().isSelected() && !activer4) {
+	    			act = new Action("active");
+	    			act.addTerm(new Literal("rule4"));
+	    			activer1 = true;
+	    		} else {
+	    			act = new Action("inactive");
+	    			act.addTerm(new Literal("rule4"));
+	    			activer1 = false;
+	    		}
+	    	}
 	    	
 	    	envThread.latestAction(act);
 		}
